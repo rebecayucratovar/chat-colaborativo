@@ -28,7 +28,7 @@ passport.use(new GoogleStrategy(
   {
     clientID:     process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL:  `${BASE_URL}/auth/google/callback`,  // ← usa BASE_URL en lugar de localhost hardcodeado
+    callbackURL: "/auth/google/callback"
   },
   (_, __, profile, done) => done(null, { id: profile.id, name: profile.displayName })
 ));
