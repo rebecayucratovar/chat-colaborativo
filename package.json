@@ -1,10 +1,10 @@
 {
-  "name": "server",
+  "name": "chat-colaborativo",
   "version": "1.0.0",
-  "description": "Chat colaborativo en tiempo real con WebSockets y autenticación Passport.js",
-  "main": "server.js",
+  "description": "Chat colaborativo en tiempo real con WebSockets",
+  "main": "server/server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server/server.js"
   },
   "keywords": [],
   "author": "",
