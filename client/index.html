@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chat Colaborativo</title>
+  <!-- Fuente DM Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <!-- Todos los estilos en styles.css -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- PANTALLA DE LOGIN  -->
+  <div id="login-screen">
+
+    <div class="login-title">
+      <span>💬</span> Chat Colaborativo
+    </div>
+
+    <!-- Botón Google OAuth: Passport intercepta esta ruta -->
+    <a id="btn-google" href="/auth/google">
+      <svg class="g-icon" viewBox="0 0 48 48">
+        <path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.2l6.7-6.7C35.8 2.5 30.3 0 24 0 14.7 0 6.8 5.4 2.9 13.4l7.8 6C12.5 13 17.9 9.5 24 9.5z"/>
+        <path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4 7.1-10 7.1-17z"/>
+        <path fill="#FBBC05" d="M10.7 28.6A14.7 14.7 0 0 1 9.5 24c0-1.6.3-3.2.7-4.6l-7.8-6A23.9 23.9 0 0 0 0 24c0 3.9.9 7.5 2.9 10.6l7.8-6z"/>
+        <path fill="#34A853" d="M24 48c6.3 0 11.6-2.1 15.5-5.7l-7.5-5.8c-2.1 1.4-4.8 2.2-8 2.2-6.1 0-11.3-4.1-13.2-9.7l-7.8 6C6.8 42.6 14.7 48 24 48z"/>
+      </svg>
+      Iniciar sesión con Google
+    </a>
+
+    <div class="divider">o</div>
+
+    <!-- Acceso como invitado: nombre opcional, se genera uno automático si está vacío -->
+    <div class="guest-row">
+      <input id="guest-name" type="text" placeholder="Entrar como invitado" />
+      <button id="btn-guest" onclick="enterAsGuest()">Entrar</button>
+    </div>
+
+  </div>
+
+
+  <!-- PANTALLA DE CHAT -->
+  <div id="chat-screen">
+
+    <div class="chat-header">
+      <div class="chat-header-left">
+        <span>💬</span>
+        Chat
+        <span id="username-display"></span>
+      </div>
+      <button id="btn-logout" onclick="logout()">Cerrar sesión</button>
+    </div>
+
+    <!-- Historial de mensajes -->
+    <div id="chat-box"></div>
+
+    <div class="chat-footer">
+      <input id="msg-input" type="text" placeholder="Escribe un mensaje…" />
+      <button id="btn-send" onclick="sendMessage()">Enviar</button>
+    </div>
+
+  </div>
+
+
+  <script src="script.js"></script>
+
+</body>
+</html>

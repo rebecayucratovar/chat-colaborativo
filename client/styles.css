@@ -1,0 +1,150 @@
+/* styles.css – Chat Colaborativo */
+
+:root {
+  --bg:      #f7f7f5;
+  --surface: #ffffff;
+  --border:  #e4e4e0;
+  --text:    #1a1a1a;
+  --muted:   #888;
+  --accent:  #3d5afe;
+  --radius:  12px;
+  --shadow:  0 2px 16px rgba(0,0,0,.07);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: "DM Sans", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Login y chat comparten la misma card base */
+#login-screen, #chat-screen {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  animation: fadeUp .35s ease both;
+}
+
+#login-screen {
+  padding: 40px 36px;
+  width: 340px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.login-title { display: flex; align-items: center; gap: 10px; font-size: 1.4rem; font-weight: 600; }
+
+/* Botón Google */
+#btn-google {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 11px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  font-family: inherit;
+  font-size: .95rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--text);
+  transition: background .15s;
+}
+#btn-google:hover { background: var(--bg); }
+.g-icon { width: 18px; height: 18px; }
+
+/* Separador "o" */
+.divider { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: .8rem; }
+.divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+
+.guest-row { display: flex; gap: 8px; }
+
+/* Inputs compartidos */
+#guest-name, #msg-input {
+  flex: 1;
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: .9rem;
+  outline: none;
+  transition: border-color .15s;
+}
+#guest-name:focus, #msg-input:focus { border-color: var(--accent); }
+
+/* Botones de acción (Entrar / Enviar) */
+#btn-guest, #btn-send {
+  padding: 9px 14px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: .9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background .15s;
+  white-space: nowrap;
+}
+#btn-guest:hover, #btn-send:hover { background: #2a46d4; }
+
+/* Chat */
+#chat-screen { display: none; flex-direction: column; width: 420px; height: 580px; overflow: hidden; }
+
+.chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  font-weight: 600;
+}
+
+#username-display { font-size: .83rem; color: var(--muted); font-weight: 400; margin-left: 4px; }
+
+#btn-logout {
+  font-family: inherit;
+  font-size: .8rem;
+  color: var(--muted);
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: color .15s, border-color .15s;
+}
+#btn-logout:hover { color: var(--text); border-color: #bbb; }
+
+#chat-box {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  scroll-behavior: smooth;
+}
+
+/* Burbujas */
+.msg { max-width: 78%; padding: 8px 12px; border-radius: 10px; font-size: .9rem; line-height: 1.45; word-break: break-word; }
+.msg.own   { align-self: flex-end;   background: var(--accent); color: #fff; border-bottom-right-radius: 3px; }
+.msg.other { align-self: flex-start; background: var(--bg); border: 1px solid var(--border); border-bottom-left-radius: 3px; }
+.msg .sender { font-size: .72rem; font-weight: 600; margin-bottom: 2px; opacity: .7; }
+.msg.system { align-self: center; background: none; border: none; color: var(--muted); font-size: .78rem; font-style: italic; padding: 2px 0; }
+
+.chat-footer { display: flex; gap: 8px; padding: 12px 14px; border-top: 1px solid var(--border); }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
