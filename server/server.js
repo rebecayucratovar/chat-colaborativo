@@ -8,27 +8,32 @@ const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const WebSocket      = require("ws");
 
 const app  = express();
-// Railway asigna el puerto automáticamente por variable de entorno
-const PORT = process.env.PORT || 3000;
+
+// Railway asigna el puerto por variable de entorno — NUNCA hardcodear
+const PORT = parseInt(process.env.PORT) || 3000;
 
 // La URL base cambia entre local y producción
 const BASE_URL = process.env.BASE_URL || `http://localhost:${PORT}`;
 
 app.use(express.static(path.join(__dirname, "..", "client")));
 app.use(express.json());
-app.use(session({ secret: process.env.SESSION_SECRET || "chat-secreto", resave: false, saveUninitialized: false }));
+app.use(session({
+  secret: process.env.SESSION_SECRET || "chat-secreto",
+  resave: false,
+  saveUninitialized: false
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 
 passport.serializeUser((u, done) => done(null, u));
 passport.deserializeUser((u, done) => done(null, u));
 
-// Estrategia Google: obtiene el nombre real del perfil
+// Estrategia Google OAuth
 passport.use(new GoogleStrategy(
   {
     clientID:     process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "/auth/google/callback"
+    callbackURL:  `${BASE_URL}/auth/google/callback`
   },
   (_, __, profile, done) => done(null, { id: profile.id, name: profile.displayName })
 ));
@@ -40,24 +45,24 @@ app.get("/auth/google/callback",
   (req, res) => res.redirect("/")
 );
 
-// Invitado: usa el nombre escrito o genera "Usuario_XXXX" automáticamente
+// Invitado
 app.get("/auth/guest", (req, res) => {
   const name = req.query.name?.trim() || `Usuario_${Math.floor(1000 + Math.random() * 9000)}`;
   req.session.guestUser = name;
   res.json({ name });
 });
 
-// Devuelve quién está en sesión activa
+// Sesión activa
 app.get("/me", (req, res) => {
-  if (req.isAuthenticated())    return res.json({ name: req.user.name });
-  if (req.session.guestUser)    return res.json({ name: req.session.guestUser });
+  if (req.isAuthenticated())  return res.json({ name: req.user.name });
+  if (req.session.guestUser)  return res.json({ name: req.session.guestUser });
   res.json({ name: null });
 });
 
-// Cierre de sesión con el botón
+// Logout
 app.get("/logout", (req, res) => req.logout(() => { req.session.destroy(); res.redirect("/"); }));
 
-// Cierre brusco del navegador (sendBeacon desde el cliente)
+// Cierre brusco del navegador
 app.post("/leave", (req, res) => {
   const { name } = req.body;
   if (name) broadcast({ type: "leave", name });
@@ -67,9 +72,12 @@ app.post("/leave", (req, res) => {
 
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "..", "client", "index.html")));
 
-// Servidor HTTP + WebSocket
-const server = app.listen(PORT, () => console.log(`Servidor en ${BASE_URL}`));
-const wss    = new WebSocket.Server({ server });
+// Escuchar en 0.0.0.0 es OBLIGATORIO en Railway
+const server = app.listen(PORT, "0.0.0.0", () =>
+  console.log(`Servidor escuchando en 0.0.0.0:${PORT} — ${BASE_URL}`)
+);
+
+const wss = new WebSocket.Server({ server });
 
 function broadcast(data) {
   const msg = JSON.stringify(data);
@@ -81,7 +89,3 @@ wss.on("connection", (ws) => {
     try { broadcast(JSON.parse(raw)); } catch {}
   });
 });
-
-// TODO (Emerson): descomentar cuando esté lista la base de datos
-// const db = require("./db");
-// db.saveMessage(name, text) / db.getMessages()
